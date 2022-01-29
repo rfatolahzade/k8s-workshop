@@ -1,3 +1,4 @@
+![Adventures in Kubernetes](https://miro.medium.com/max/1100/1*9B8HEd8Ap3vVL126UaFldQ.png)
 # k8s-workshop
 Quick commands:
 ```bash
@@ -37,7 +38,7 @@ alias kapi='kubectl api-resources'
 EOF
 
  ``` 
-
+ 
 # Adventure time
 
 Create a NameSpace (ns):
@@ -45,11 +46,13 @@ Create a NameSpace (ns):
 kubectl create ns demo
 #OR
 kubectl create -f 0.namepace-demo.yaml
+kubectl get ns
 ```
 Create a Pod (po):
 ```bash
 kubectl run --generator=run-pod/v1 nginx --image=nginx:1.18 -l app.kubernetes.io/name=nginx --port=80 -n demo 
 #OR
 kubectl create -f 1.pod-nginx.yaml
+kubectl get po -n demo
 ```
 
