@@ -7,9 +7,9 @@ minikube start
 Four required fields:
 ```bash
 apiVersion    # kubectl api-resources
-Kind
-Metadata
-spec
+kind          # Namespace,pod,deployment,StatefulSets,Service,PersistentVolume,PersistentVolumeClaim,...
+metadata      # name,label,namespace,annotations,...
+spec          # replicas,containers,selector,...
 ```
 Aliases:
 ```bash
