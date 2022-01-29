@@ -36,7 +36,7 @@ alias kapi='kubectl api-resources'
 
 EOF
 
- ```bash 
+ ``` 
 
 # Adventure time
 
