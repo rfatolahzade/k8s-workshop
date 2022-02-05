@@ -40,7 +40,7 @@ EOF
  ``` 
  
 # Adventure time
-#### NameSpace
+### NameSpace:
 Create a NameSpace (ns):
 ```bash
 kubectl create ns demo
@@ -48,7 +48,7 @@ kubectl create ns demo
 kubectl create -f Namespace.yaml
 kubectl get ns
 ```
-#### Pod
+### Pod:
 Create a Pod (po):
 ```bash
 kubectl run --generator=run-pod/v1 nginx --image=nginx:1.18 -l app.kubernetes.io/name=nginx --port=80 -n demo 
@@ -57,7 +57,7 @@ kubectl create -f Pod.yaml
 kubectl get po -n demo
 ```
 
-#### initContainers
+### initContainers:
 Create a Pod with an initContainers,You can specify init containers in the Pod specification alongside the "containers" array (which describes app containers)
 The init containers: specialized containers that run before app containers in a Pod. Init containers can contain utilities or setup scripts not present in an app image.
 
