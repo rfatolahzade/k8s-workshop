@@ -119,3 +119,12 @@ Hello From initContainers
 - NOTICE 2: Each init container must complete successfully before the next one starts.
 - NOTICE 3: init containers do not support lifecycle, livenessProbe, readinessProbe, or startupProbe because they must run to completion before the Pod can be ready.
 ```
+Other sample (initContainers for deployment)
+```bash
+kubectl create -f initContainers-s2.yaml
+kubectl get po -n demo
+#Curl the pod's IP:
+curl 10.32.0.5:80
+#Output: <h1>Hello Minikube</h1>
+```
+I'll be back to it (After Deployment and volumes).
