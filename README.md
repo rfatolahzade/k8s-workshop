@@ -137,6 +137,9 @@ kubectl create deploy nginx-deployment --image nginx:1.18 --port=80 -n demo
 kubectl create -f Deployment.yaml
 kubectl get deploy -n demo
 ```
+Best Practices and Examples for Working with Kubernetes [Labels](https://www.replex.io/blog/9-best-practices-and-examples-for-working-with-kubernetes-labels)
+,[Labels and Selectors](https://kubernetes-on-aws.readthedocs.io/en/latest/user-guide/labels.html)
+
 New capabilities that we will have:
 #### 1.Rollout:
 ```bash
