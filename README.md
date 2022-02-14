@@ -127,4 +127,103 @@ kubectl get po -n demo
 curl 10.32.0.5:80
 #Output: <h1>Hello Minikube</h1>
 ```
-I'll be back to it (After Deployment and volumes).
+TODO:I'll be back to it (After Deployment and volumes).
+
+
+### Deployment:
+Create a Deployment (deploy):
+```bash
+kubectl create deploy nginx-deployment --image nginx:1.18 --port=80 -n demo 
+kubectl create -f Deployment.yaml
+kubectl get deploy -n demo
+```
+New capabilities that we will have:
+#### 1.Rollout:
+```bash
+kubectl rollout history deployment nginx-deployment
+kubectl rollout history deployment nginx-deployment --revision=1
+kubectl rollout history deployment nginx-deployment --revision=2
+```
+And then compare result.
+Change the current state (revision):
+To the previous version:
+```bash
+k rollout undo deployment nginx-deployment 
+```
+To the specific version:
+```bash
+k rollout undo deployment nginx-deployment --revision=2
+```
+
+You can add "revisionHistoryLimit" to your deployment:
+```bash
+.
+.
+replicas: 1
+revisionHistoryLimit: 10 
+.
+.
+```
+It depends on number of comits per day.
+As you saw "CHANGE-CAUSE" is empty; let's fill it via these ways:
+```bash
+kubectl create -f Deployment.yaml --record=true
+kubectl rollout history deployment nginx-deployment
+```
+Your command has been saved as CHANGE-CAUSE.
+Useful in Live objects:
+```bash
+kubectl set image deployment/nginx-deployment web=nginx:1.19 --record=true
+kubectl rollout history deployment nginx-deployment
+```
+
+If you want to save changes from yaml files to CHANGE-CAUSE
+You need to add this annotaion to yml file:
+```bash
+labels:
+ app: nginx
+annotations:
+  kubernetes.io/change-cause: 'Changed nginx image to felan'
+```
+And then apply changes, we dont need to add --record=true
+
+TODO:Test both(--record=true and annotation)
+
+#### 2.Scaling:
+Fix number of pods:
+To scale up in Live object:
+```bash
+kubectl scale deployment/nginx-deployment --replicas=3
+```
+Autoscale (flexible):
+Live Object:
+```bash
+kubectl autoscale deployment/nginx-deployment --min=1 --max=15  --cpu-percent=90
+```
+Output "hpa.autoscaling/nginx-deployment autoscaled."
+Lets define HPA:
+```bash
+kubectl create -f HorizontalPodAutoscaler.yaml
+```
+take a look at out hpa yml file:
+```bash
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-autoscalar
+spec:
+  maxReplicas: 15
+  minReplicas: 1
+  scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: nginx-deployment
+  targetCPUUtilizationPercentage: 90
+```
+List of hpa:
+```bash
+kubectl get hpa
+```
+
+TODO:Scaling in DataBase is diffrent.(postgre chart -Primary-readReplicas)
+
