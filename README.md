@@ -229,4 +229,4 @@ kubectl get hpa
 ```
 
 TODO:Scaling in DataBase is diffrent.(postgre chart -Primary-readReplicas)
-
+Next (pause,canary deployment)
