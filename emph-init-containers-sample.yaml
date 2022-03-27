@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-adv
+  labels:
+    app.kubernetes.io/name: nginx
+spec:
+  containers:
+    - name: ephemeral-container
+      image: ghcr.io/rfinland/ephemeral-container:master
+      command:
+        - sleep
+        - "3600"
+    - name: web
+      image: nginx:1.18
+      ports:
+       - name: web
+         containerPort: 80
+         protocol: TCP
+    - name: db
+      image: mariadb
+      env:
+       - name: MARIADB_ROOT_PASSWORD
+         value: 'admin'
+       - name: MARIADB_DATABASE
+         value: 'anisa' 
+  initContainers:
+      - name: my-init-containers
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "echo 'Hello From initContainers' "]
