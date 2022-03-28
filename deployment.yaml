@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: nginx-deployment
+ labels:
+   app: nginx
+ annotations:
+  kubernetes.io/change-cause: 'Changing nginx image to 1.18'
+
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  paused: false
+  revisionHistoryLimit: 20
+  selector:
+    matchLabels:
+      app: nginx
+#Pod template start:
+  template:
+    metadata:
+      labels:
+       app: nginx
+    spec:
+     containers:
+     - name: nginx
+       image: nginx:1.18
+       ports:
+        - containerPort: 80
+#Pod template end	
+#Checkout Startup of the start the app inner container.
+       startupProbe:
+         exec:
+#           command:
+#           - cat
+#           - /etc/nginx/nginx.conf
+         httpGet:
+           port: 80
+           path: /
+#           path: /nginx   # Startup probe failed: HTTP probe failed with statuscode: 404- Unhealthy
+#           httpHeaders:
+#             - name:
+#               value:
+#         tcpSocket:
+#            port: 80
+         initialDelaySeconds: 10
+         periodSeconds: 5
+         failureThreshold: 2
+         successThreshold: 1
+#Checkout pod in the good state - container stat -describe-events
+       livenessProbe:
+         httpGet:
+           port: 80
+           path: /
+#         tcpSocket:
+#            port: 80
+         initialDelaySeconds: 5
+         periodSeconds: 5
+         failureThreshold: 2
+         successThreshold: 1  #Default
+#Checkout the app inner container-response to requests -app has a problem - log of container
+       readinessProbe:
+         httpGet:
+           port: 80
+           path: /
+#         tcpSocket:
+#            port: 80
+         initialDelaySeconds: 5
+         periodSeconds: 5
+         failureThreshold: 2
+         successThreshold: 2
