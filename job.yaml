@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job
+spec:
+  template:
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["echo", "Something!!!"]
+      restartPolicy: Never
+#  backoffLimit: 4  #time to control count of fail
+#  ttlSecondsAfterFinished: 20   #Delete after complete
+#  activeDeadlineSeconds: 40   #Anti Loop,after that kill it --with log you can findout it failed or succeed
+#  completions: 3   #try to aim
+#  parallelism: 3
