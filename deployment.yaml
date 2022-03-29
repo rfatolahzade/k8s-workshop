@@ -72,3 +72,10 @@ spec:
          periodSeconds: 5
          failureThreshold: 2
          successThreshold: 2
+       resources:
+         requests:          #Startup Reserve 
+           memory: "16Mi"
+           cpu: "10m"     # 1000m = 1 CPU
+         limits:
+           memory: "18Mi"  #using limits ,max of req, kube control manager manage it, limit for container.
+           cpu: "10m"
