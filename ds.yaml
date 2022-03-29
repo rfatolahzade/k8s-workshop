@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
  name: nginx-deployment
  labels:
@@ -8,14 +8,12 @@ metadata:
   kubernetes.io/change-cause: 'Changing nginx image to 1.18'
 
 spec:
-  replicas: 3
-  strategy:
+  revisionHistoryLimit: 20
+  updateStrategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
-  paused: false
-  revisionHistoryLimit: 20
   selector:
     matchLabels:
       app: nginx

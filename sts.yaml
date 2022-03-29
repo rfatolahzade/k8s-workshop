@@ -1,20 +1,22 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
- name: nginx-deployment
+ name: nginx
  labels:
    app: nginx
  annotations:
   kubernetes.io/change-cause: 'Changing nginx image to 1.18'
 
 spec:
-  replicas: 3
-  strategy:
-    type: RollingUpdate
+  replicas: 7
+  updateStrategy:
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-  paused: false
+       partition: 2
+#    type: OnDelete
+#    type: RollingUpdate
+#  podManagementPolicy: Parallel 
+  podManagementPolicy: OrderedReady 
+  serviceName: "nginx"
   revisionHistoryLimit: 20
   selector:
     matchLabels:
@@ -79,3 +81,17 @@ spec:
          limits:
            memory: "18Mi"  #using limits ,max of req, kube control manager manage it, limit for container.
            cpu: "10m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: nginx
+ labels:
+   app: nginx
+spec:
+  clusterIP: None
+  selector:
+    app: nginx
+  ports:
+   - port: 80
+   
