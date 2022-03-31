@@ -15,12 +15,12 @@ spec:
           - name: busybox
             image: busybox
 #            command: ["echo", "Something!!!"]
-#            command:
-#            - /bin/sh
-#            - -c
-#            -  date; echo hell
             command:
             - /bin/sh
             - -c
-            -  tail -f /dev/null
+            -  date; echo hell
+#            command:
+#            - /bin/sh
+#            - -c
+#            -  tail -f /dev/null
           restartPolicy: Never
