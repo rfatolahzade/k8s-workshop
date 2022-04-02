@@ -228,5 +228,59 @@ List of hpa:
 kubectl get hpa
 ```
 
-TODO:Scaling in DataBase is diffrent.(postgre chart -Primary-readReplicas)
-Next (pause,canary deployment)
+
+####  Role-Based Access Control -> RBAC
+Objects:
+1. ClusterRole (Group) - Cluster access  called => 2. Cluster RoleBinding
+3. Role - NS - called => 4.RoleBinding
+
+# Create ns,sa,secret,role,rolebinding
+```bash
+cat ramin-sa.yaml
+kubectl create -f ramin-sa.yaml
+```
+Now we need to create a KubeConfig for new user:
+template of kubeConfig:
+```bash
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data:  {cluster-ca}
+    server:  {server-dns}
+  name: {cluster-name}
+contexts:
+- context:
+    cluster: {cluster-name}
+    user: {user-name}
+  name: {context-name}
+current-context: {context-name}
+
+kind: Config
+users:
+- name: {user-name}
+  user:
+    token: {secret-token}
+```
+Run this command to aim cluster-ca token: 
+```bash
+kubectl config view --flatten --minify 
+```
+cluster-ca,server-dns,cluster-name,context-name: same as root kubeconfig.
+user-name: our new usename.
+secret-token: to aim this token we have to run:
+```bash 
+kubectl get secrets -n qua
+#Describe ramin-token-blah 
+kubectl describe secret  ramin-token-fdcjx -n qua
+```
+
+Copy the user token and place in new kubeconfig secret-token.
+Your new kubeconfig looks like:
+```bash
+cat config.yaml
+```
+Now you can test it before send it to new user:
+```bash
+kubectl --kubeconfig=config.yaml config use-context minikube
+kubectl --kubeconfig=config.yaml get po -n qua
+```
