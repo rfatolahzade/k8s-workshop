@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qua
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ramin
+  namespace: qua
+secrets:
+  - name: ramin-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ramin-secret
+  namespace: qua
+  annotations: 
+    kubernetes.io/service-account.name: ramin #This secret Specfific for this user
+type: kubernetes.io/service-account-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: qua-role  #our Permision group
+  namespace: qua
+rules:
+  - apiGroups: [""]  #All Api returns 403 except below:
+    resources: ["pods"]
+    verbs: ["get","list","watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: qua-role-binding  #our Permision group
+  namespace: qua
+subjects:
+ - kind: ServiceAccount
+   name: ramin
+   namespace: qua
+roleRef:
+   kind: Role
+   name: qua-role
+   apiGroup: rbac.authorization.k8s.io
