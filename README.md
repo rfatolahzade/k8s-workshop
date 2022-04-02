@@ -1,5 +1,14 @@
 ![Adventures in Kubernetes](https://miro.medium.com/max/1100/1*9B8HEd8Ap3vVL126UaFldQ.png)
 # k8s-workshop
+Bash completion:
+```bash
+apt-get install bash-completion
+source /usr/share/bash-completion/bash_completion
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+#echo 'alias k=kubectl' >>~/.bashrc
+echo 'complete -F __start_kubectl k' >>~/.bashrc
+```
+
 Quick commands:
 ```bash
 minikube start
