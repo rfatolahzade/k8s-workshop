@@ -284,5 +284,9 @@ Now you can test it before send it to new user:
 kubectl --kubeconfig=config.yaml config use-context minikube
 kubectl --kubeconfig=config.yaml get po -n qua
 ```
-
-#
+#### NetworkPolicy
+Sample NetworkPolicy to limit access to app:
+We defined policyTypes,ipBlock,namespaceSelector,podselector,limit access from range of ports
+```bash
+cat networkpolicy.yaml
+```
