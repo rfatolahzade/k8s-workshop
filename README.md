@@ -584,3 +584,10 @@ We defined policyTypes,ipBlock,namespaceSelector,podselector,limit access from r
 ```bash
 cat networkpolicy.yaml
 ```
+
+#### pv-pvc hostpath
+```bash
+cat pv-pvc.yaml
+cat deployment.yaml
+```
+
