@@ -77,10 +77,10 @@ kubectl get ns
 ### Pod:
 Create a Pod (po):
 ```bash
-kubectl run --generator=run-pod/v1 nginx --image=nginx:1.18 -l app.kubernetes.io/name=nginx --port=80 -n demo 
+kubectl run --generator=run-pod/v1 nginx --image=nginx:1.18 -l app.kubernetes.io/name=nginx --port=80  
 #OR
 kubectl create -f Pod.yaml
-kubectl get po -n demo
+kubectl get po 
 ```
 Pod to Pod needs CNI.
 ### initContainers:
@@ -97,12 +97,12 @@ Restart Policy for pods(When Error Happened): Always (Exit code 0 or 1 restart t
 
 ```bash
 kubectl create -f initContainers.yaml
-kubectl get po -n demo
+kubectl get po 
 ```
 Let's take a look at the description of our pod:
 
 ```bash
-kubectl describe pod/nginx -n demo
+kubectl describe pod/nginx 
 ```
 As you can see our lightweight Init Containers that are named my-init-containers ran first:
 ```bash
@@ -141,7 +141,7 @@ Accessing logs from Init Containers,Pass the Init Container name along with the 
 To Inspect the first(only) init container:
 ```bash
 #kubectl logs <pod-name> -c <init-container>
-kubectl logs nginx -n demo -c my-init-containers
+kubectl logs nginx  -c my-init-containers
 ```
 Output:
 ```bash
@@ -156,7 +156,7 @@ Hello From initContainers
 Other sample (initContainers for deployment)
 ```bash
 kubectl create -f initContainers-s2.yaml
-kubectl get po -n demo
+kubectl get po 
 #Curl the pod's IP:
 curl 10.32.0.5:80
 #Output: <h1>Hello Minikube</h1>
@@ -181,7 +181,7 @@ k  exec -it nginx-adv -- sh
 curl localhost
 
 OUTPUT:
-k -n demo get po nginx-adv -o yaml > nginx-temp.yaml
+k  get po nginx-adv -o yaml > nginx-temp.yaml
 ```
 
 #WORKLOADS (Pods controllers-managers):
@@ -197,9 +197,9 @@ Containers Deployments (Workloads):
 Useful for stateless applicaions.
 Create a Deployment (deploy):
 ```bash
-kubectl create deploy nginx-deployment --image nginx:1.18 --port=80 -n demo 
+kubectl create deploy nginx-deployment --image nginx:1.18 --port=80  
 kubectl create -f Deployment.yaml
-kubectl get deploy -n demo
+kubectl get deploy 
 ```
 Manage who has this label (app: nginx) Also labels of deployments useful for Services.
 
