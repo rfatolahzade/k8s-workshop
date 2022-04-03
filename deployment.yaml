@@ -8,7 +8,7 @@ metadata:
   kubernetes.io/change-cause: 'Changing nginx image to 1.18'
 
 spec:
-  replicas: 3
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -79,3 +79,37 @@ spec:
          limits:
            memory: "18Mi"  #using limits ,max of req, kube control manager manage it, limit for container.
            cpu: "10m"
+       volumeMounts:
+         - name: ap-storage
+           mountPath: /var/www/html    #hostpath.path:"/home/app-pv"
+     volumes:
+      - name: ap-storage
+        persistentVolumeClaim:
+          claimName: app-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-clusterip
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
