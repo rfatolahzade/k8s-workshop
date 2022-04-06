@@ -522,7 +522,6 @@ minikube tunnel
 minikube service nginx --url
 ```
  
-
 ####  Role-Based Access Control -> RBAC
 Objects:
 1. ClusterRole (Group) - Cluster access  called => 2. Cluster RoleBinding
@@ -590,4 +589,67 @@ cat networkpolicy.yaml
 cat pv-pvc.yaml
 cat deployment.yaml
 ```
+
+#Config Map
+
+if you want to change configmap you have to do it in manifest and apply. (file mode)
+envfrom
+
+#Secrets:
+#Template:
+```bash
+{"auths":{"https://index.docker.io/v1/":{"username":"USERNAME","password":"PASSWORD","email":"EMAIL","auth":"TOKEN="}}}
+```
+#Based on my Values:
+REPO_NAME: Your docker registry in my case docker hub.
+auth: cat ~/.docker/config.json
+```bash
+{"auths":{"localhost:5000":{"username":"dockeruser","password":"admin","auth":"ZG9ja2VydXNlcjphZG1pbg=="}}}
+#base64:
+echo -n '{"auths":{"localhost:5000":{"username":"dockeruser","password":"admin","auth":"ZG9ja2VydXNlcjphZG1pbg=="}}}' | base64
+#Result:
+eyJhdXRocyI6eyJsb2NhbGhvc3Q6NTAwMCI6eyJ1c2VybmFtZSI6ImRvY2tlcnVzZXIiLCJwYXNzd29yZCI6ImFkbWluIiwiYXV0aCI6IlpHOWphMlZ5ZFhObGNqcGhaRzFwYmc9PSJ9fX0=
+echo 'eyJhdXRocyI6eyJsb2NhbGhvc3Q6NTAwMCI6eyJ1c2VybmFtZSI6ImRvY2tlcnVzZXIiLCJwYXNzd29yZCI6ImFkbWluIiwiYXV0aCI6IlpHOWphMlZ5ZFhObGNqcGhaRzFwYmc9PSJ9fX0=' | base64 --decode
+```
+
+#Template to create a secret:
+```bash
+kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+#Based on my value:
+kubectl create secret docker-registry regcred --docker-server=localhost:5000 --docker-username=dockeruser --docker-password=admin 
+```
+#Create a Private Docker REGISTRY:
+```bash
+sudo apt install apache2-utils
+mkdir auth
+cd auth
+```
+#Set your user and enter your password:
+```bash
+htpasswd -Bc htpasswd dockeruser
+docker run -d -p 5000:5000 --restart=always --name registry_private  -v `pwd`/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd"  registry:2
+```
+Login:
+```bash
+docker login localhost:5000
+```
+with 
+USER: dockeruser 
+PASSWORD:admin
+```bash
+docker tag mysql:latest localhost:5000/mysql:latest
+docker push localhost:5000/mysql:latest
+docker rmi mysql:latest
+docker rmi localhost:5000/mysql:latest
+docker pull localhost:5000/mysql:latest
+docker exec -it registry_private  bin/sh
+ls var/lib/registry/docker/registry/v2/repositories/
+```
+Let's deploy:
+```bash
+cat deployment-secret.yaml
+kubectl create -f deployment-secret.yaml
+```
+
+
 

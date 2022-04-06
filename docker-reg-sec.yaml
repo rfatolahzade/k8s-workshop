@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata: 
+  name: docker-repo-mani
+type: kubernetes.io/dockerconfigjson
+data:
+ .dockerconfigjson: eyJhdXRocyI6eyJsb2NhbGhvc3Q6NTAwMCI6eyJ1c2VybmFtZSI6ImRvY2tlcnVzZXIiLCJwYXNzd29yZCI6ImFkbWluIiwiYXV0aCI6IlpHOWphMlZ5ZFhObGNqcGhaRzFwYmc9PSJ9fX0=
